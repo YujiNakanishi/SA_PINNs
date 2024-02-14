@@ -76,3 +76,14 @@ class Net(nn.Module):
         residual = dxxu + dyyu + 16.*u - f
 
         return torch.mean(residual**2)
+
+
+class SA_Net(Net):
+    def __init__(self, neuron = 100):
+        super().__init__(neuron)
+        for param in self.parameters():
+            param.requires_grad = False
+    
+    def step(self, sigma = 1.):
+        for param in self.parameters():
+            param += sigma*torch.randn(param.shape).to("cuda")
